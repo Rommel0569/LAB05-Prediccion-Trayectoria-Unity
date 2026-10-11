@@ -16,4 +16,4 @@ El repositorio original publica solo `Assets`; este proyecto agrega `Packages` y
 - Arrastrar la bola con el mouse y soltar para lanzar.
 - La escena y los controles son los del tutorial original.
 
-`Ball.cs`, `GameManager.cs`, `Trajectory.cs` y `Cup.cs` son los scripts originales. Los ejercicios adicionales del laboratorio (objetivo extra y puntuacion) aun no estan implementados en esta version fiel al tutorial.
+`Ball.cs`, `GameManager.cs`, `Trajectory.cs` y `Cup.cs` parten de los scripts originales. Los ejercicios adicionales (objetivo y puntuacion) se implementan en esos scripts y `ScoreTarget.cs`. La explicacion y el cuestionario estan en `INFORME_LAB05.md`.

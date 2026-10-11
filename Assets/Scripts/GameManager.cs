@@ -29,12 +29,15 @@ public class GameManager : MonoBehaviour
 	Vector2 direction;
 	Vector2 force;
 	float distance;
+	int score;
+	GUIStyle scoreStyle;
 
 	//---------------------------------------
 	void Start ()
 	{
 		cam = Camera.main;
 		ball.DesactivateRb ();
+		CreateExtraTarget ();
 	}
 
 	void Update ()
@@ -84,6 +87,34 @@ public class GameManager : MonoBehaviour
 		ball.Push (force);
 
 		trajectory.Hide ();
+	}
+
+	void CreateExtraTarget ()
+	{
+		GameObject target = new GameObject ("Cub - objetivo adicional");
+		target.transform.position = new Vector3 (2.5f, 0f, 0f);
+		target.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
+		SpriteRenderer renderer = target.AddComponent<SpriteRenderer> ();
+		renderer.sprite = Sprite.Create (Texture2D.whiteTexture, new Rect (0, 0, 1, 1), new Vector2 (0.5f, 0.5f), 1f);
+		renderer.color = new Color (0.95f, 0.3f, 0.25f);
+		BoxCollider2D collider = target.AddComponent<BoxCollider2D> ();
+		collider.isTrigger = true;
+		target.AddComponent<ScoreTarget> ();
+	}
+
+	public void AddPoint ()
+	{
+		score++;
+	}
+
+	void OnGUI ()
+	{
+		if (scoreStyle == null) {
+			scoreStyle = new GUIStyle (GUI.skin.label);
+			scoreStyle.fontSize = 24;
+			scoreStyle.normal.textColor = Color.white;
+		}
+		GUI.Label (new Rect (20, 20, 250, 40), "Puntos: " + score, scoreStyle);
 	}
 
 }

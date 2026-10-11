@@ -47,8 +47,9 @@ public class Trajectory : MonoBehaviour
 	{
 		timeStamp = dotSpacing;
 		for (int i = 0; i < dotsNumber; i++) {
-			pos.x = (ballPos.x + forceApplied.x * timeStamp);
-			pos.y = (ballPos.y + forceApplied.y * timeStamp) - (Physics2D.gravity.magnitude * timeStamp * timeStamp) / 2f;
+			Vector2 velocity = forceApplied / GameManager.Instance.ball.rb.mass;
+			pos.x = ballPos.x + velocity.x * timeStamp + Physics2D.gravity.x * timeStamp * timeStamp / 2f;
+			pos.y = ballPos.y + velocity.y * timeStamp + Physics2D.gravity.y * timeStamp * timeStamp / 2f;
 		
 			//you can simlify this 2 lines at the top by:
 //pos = (ballPos+force*time)-((-Physics2D.gravity*time*time)/2f);
