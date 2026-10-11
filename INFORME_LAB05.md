@@ -23,6 +23,8 @@ Se partio de la escena `Assets/Scenes/level1.unity` y los recursos del repositor
 
 `GameManager.CreateExtraTarget` crea un sprite cuadrado rojo con `BoxCollider2D` de tipo trigger. `ScoreTarget` detecta la entrada de la bola. `GameManager.AddPoint` incrementa el marcador, mostrado por `OnGUI`. La taza tambien aporta puntos.
 
+Cada disparo solo puede sumar una vez. Tras un acierto, la bola regresa a la posicion inicial despues de medio segundo. Tambien se reinicia si queda casi inmovil durante 1.5 segundos, cae fuera del area o pasan 12 segundos. La tecla `R` permite reiniciarla en cualquier momento sin borrar la puntuacion.
+
 ## Ejercicio 4: Calculating Trajectories
 
 Se aplico la ecuacion de movimiento con aceleracion constante descrita en Unity Learn: `p(t) = p0 + v0*t + 0.5*g*t^2`. El impulso `J` produce velocidad inicial `v0 = J / m`, donde `m` es la masa del `Rigidbody2D`. En `Trajectory.UpdateDots` cada punto usa esa velocidad inicial y `Physics2D.gravity`. Esto predice la trayectoria libre previa al primer rebote o choque; despues de una colision, la trayectoria real cambia por los colliders y el material de rebote.

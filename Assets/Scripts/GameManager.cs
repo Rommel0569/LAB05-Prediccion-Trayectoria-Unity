@@ -31,11 +31,17 @@ public class GameManager : MonoBehaviour
 	float distance;
 	int score;
 	GUIStyle scoreStyle;
+	Vector3 ballStartPosition;
+	bool shotActive;
+	bool resetting;
+	float shotTime;
+	float stillTime;
 
 	//---------------------------------------
 	void Start ()
 	{
 		cam = Camera.main;
+		ballStartPosition = ball.transform.position;
 		ball.DesactivateRb ();
 		CreateExtraTarget ();
 		GameObject cup = GameObject.Find ("Cup");
@@ -45,11 +51,21 @@ public class GameManager : MonoBehaviour
 
 	void Update ()
 	{
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetKeyDown (KeyCode.R)) {
+			ResetBall ();
+			return;
+		}
+		if (shotActive && !resetting) {
+			shotTime += Time.deltaTime;
+			stillTime = ball.rb.velocity.sqrMagnitude < 0.04f ? stillTime + Time.deltaTime : 0f;
+			if (shotTime > 12f || (shotTime > 1f && stillTime > 1.5f) || ball.transform.position.y < -7f)
+				ResetBall ();
+		}
+		if (!shotActive && !resetting && Input.GetMouseButtonDown (0)) {
 			isDragging = true;
 			OnDragStart ();
 		}
-		if (Input.GetMouseButtonUp (0)) {
+		if (isDragging && Input.GetMouseButtonUp (0)) {
 			isDragging = false;
 			OnDragEnd ();
 		}
@@ -88,6 +104,9 @@ public class GameManager : MonoBehaviour
 		ball.ActivateRb ();
 
 		ball.Push (force);
+		shotActive = true;
+		shotTime = 0f;
+		stillTime = 0f;
 
 		trajectory.Hide ();
 	}
@@ -107,7 +126,24 @@ public class GameManager : MonoBehaviour
 
 	public void AddPoint ()
 	{
+		if (!shotActive || resetting) return;
 		score++;
+		shotActive = false;
+		resetting = true;
+		Invoke (nameof (ResetBall), 0.5f);
+	}
+
+	void ResetBall ()
+	{
+		CancelInvoke (nameof (ResetBall));
+		isDragging = false;
+		shotActive = false;
+		resetting = false;
+		shotTime = 0f;
+		stillTime = 0f;
+		ball.DesactivateRb ();
+		ball.transform.position = ballStartPosition;
+		trajectory.Hide ();
 	}
 
 	void OnGUI ()
@@ -118,6 +154,7 @@ public class GameManager : MonoBehaviour
 			scoreStyle.normal.textColor = Color.white;
 		}
 		GUI.Label (new Rect (20, 20, 250, 40), "Puntos: " + score, scoreStyle);
+		GUI.Label (new Rect (20, 55, 500, 30), "R: reiniciar bola");
 	}
 
 }
