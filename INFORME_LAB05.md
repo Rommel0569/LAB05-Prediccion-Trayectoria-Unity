@@ -21,7 +21,7 @@ Se partio de la escena `Assets/Scenes/level1.unity` y los recursos del repositor
 
 ## Ejercicios 2 y 3: objetivo y puntuacion
 
-`ConfigureLabScene` agrega al archivo de escena un sprite cuadrado rojo con `BoxCollider2D` de tipo trigger y un Canvas con texto de puntuacion. Ambos objetos son editables en el Inspector antes de Play. `ScoreTarget` detecta la entrada de la bola. `GameManager.AddPoint` incrementa el marcador. La taza tambien aporta puntos.
+`ConfigureLabScene` agrega al archivo de escena tres cubos separados (rojo, turquesa y amarillo), cada uno con `BoxCollider2D` de tipo trigger y `ScoreTarget`, y un Canvas con texto de puntuacion. Los objetos son editables en el Inspector antes de Play. `ScoreTarget` detecta la entrada de la bola. `GameManager.AddPoint` incrementa el marcador. La taza tambien aporta puntos.
 
 Cada disparo solo puede sumar una vez. Tras un acierto, la bola regresa a la posicion inicial despues de medio segundo. Tambien se reinicia si queda casi inmovil durante 1.5 segundos, cae fuera del area o pasan 12 segundos. La tecla `R` permite reiniciarla en cualquier momento sin borrar la puntuacion.
 
@@ -46,7 +46,7 @@ Inserte cada captura justo debajo del apartado indicado. Antes de capturar, cier
 
 1. **Despues de “Objetivos y base”**: vista de la escena en modo edicion y jerarquia con `Ball`, `Cup`, `Cub - objetivo adicional`, `GameManager` y `Marcador`. Pie: *Figura 1. Objetos de la escena de prediccion de trayectoria.*
 2. **Despues de “Ejercicio 1: estructura de clases”**: Inspector de `Ball` mostrando `Rigidbody2D`, `CircleCollider2D` y el material de rebote. Pie: *Figura 2. Componentes fisicos de la bola.*
-3. **Despues de “Ejercicios 2 y 3”**: Inspector del `Cub - objetivo adicional` mostrando `SpriteRenderer`, `BoxCollider2D` como trigger y `ScoreTarget`. Pie: *Figura 3. Objetivo adicional configurable en la escena.*
+3. **Despues de “Ejercicios 2 y 3”**: escena con los tres cubos separados e Inspector de uno de ellos mostrando `SpriteRenderer`, `BoxCollider2D` como trigger y `ScoreTarget`. Pie: *Figura 3. Objetivos adicionales configurables en la escena.*
 4. **Despues de “Ejercicios 2 y 3”**: ventana Game tras un acierto con `SCORE: 1` visible. Pie: *Figura 4. Incremento de puntuacion al acertar.*
 5. **Despues de “Ejercicio 4”**: ventana Game durante el arrastre, con los puntos de la trayectoria visibles. Pie: *Figura 5. Prediccion parabolica antes del lanzamiento.*
 6. **Despues de “Ejercicios 2 y 3”**: ventana Game con la bola devuelta al inicio tras fallar o pulsar `R`, conservando el puntaje. Pie: *Figura 6. Reinicio de la bola sin borrar la puntuacion.*

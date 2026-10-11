@@ -33,16 +33,14 @@ public static class ConfigureLabScene
         if (manager == null) return;
         bool changed = false;
 
-        GameObject target = GameObject.Find ("Cub - objetivo adicional");
-        if (target == null) {
-            target = new GameObject ("Cub - objetivo adicional", typeof (SpriteRenderer), typeof (BoxCollider2D), typeof (ScoreTarget));
-            target.transform.position = new Vector3 (2.5f, 0f, 0f);
-            target.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
-            target.GetComponent<SpriteRenderer> ().sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/box.png");
-            target.GetComponent<SpriteRenderer> ().color = new Color (0.95f, 0.3f, 0.25f);
-            target.GetComponent<BoxCollider2D> ().isTrigger = true;
+        GameObject originalTarget = GameObject.Find ("Cub - objetivo adicional");
+        if (originalTarget != null && Vector3.Distance (originalTarget.transform.position, new Vector3 (2.5f, 0f, 0f)) < 0.1f) {
+            originalTarget.transform.position = new Vector3 (0f, 2.2f, 0f);
             changed = true;
         }
+        changed |= EnsureTarget ("Cub - objetivo adicional", new Vector3 (0f, 2.2f, 0f), new Color (0.95f, 0.3f, 0.25f));
+        changed |= EnsureTarget ("Cub - objetivo 2", new Vector3 (-2.5f, 1.5f, 0f), new Color (0.12f, 0.68f, 0.72f));
+        changed |= EnsureTarget ("Cub - objetivo 3", new Vector3 (1.4f, 3.2f, 0f), new Color (0.95f, 0.7f, 0.15f));
 
         GameObject cup = GameObject.Find ("Cup");
         if (cup != null && cup.GetComponent<Cup> () == null) {
@@ -95,5 +93,17 @@ public static class ConfigureLabScene
             EditorSceneManager.MarkSceneDirty (scene);
             EditorSceneManager.SaveScene (scene);
         }
+    }
+
+    static bool EnsureTarget (string name, Vector3 position, Color color)
+    {
+        if (GameObject.Find (name) != null) return false;
+        GameObject target = new GameObject (name, typeof (SpriteRenderer), typeof (BoxCollider2D), typeof (ScoreTarget));
+        target.transform.position = position;
+        target.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
+        target.GetComponent<SpriteRenderer> ().sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/box.png");
+        target.GetComponent<SpriteRenderer> ().color = color;
+        target.GetComponent<BoxCollider2D> ().isTrigger = true;
+        return true;
     }
 }
