@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
 		cam = Camera.main;
 		ball.DesactivateRb ();
 		CreateExtraTarget ();
+		GameObject cup = GameObject.Find ("Cup");
+		if (cup != null && cup.GetComponent<Cup> () == null)
+			cup.AddComponent<Cup> ();
 	}
 
 	void Update ()
