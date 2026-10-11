@@ -21,13 +21,13 @@ public class Ball : MonoBehaviour
 
 	public void ActivateRb ()
 	{
-		rb.isKinematic = false;
+		rb.bodyType = RigidbodyType2D.Dynamic;
 	}
 
 	public void DesactivateRb ()
 	{
-		rb.velocity = Vector3.zero;
+		rb.linearVelocity = Vector3.zero;
 		rb.angularVelocity = 0f;
-		rb.isKinematic = true;
+		rb.bodyType = RigidbodyType2D.Kinematic;
 	}
 }

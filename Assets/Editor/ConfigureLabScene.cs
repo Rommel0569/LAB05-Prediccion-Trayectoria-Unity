@@ -33,16 +33,16 @@ public static class ConfigureLabScene
         if (manager == null) return;
         bool changed = false;
 
-        bool arrange = GameObject.Find ("Laboratorio - distribucion v2") == null;
+        bool arrange = GameObject.Find ("Laboratorio - distribucion v3") == null;
         changed |= EnsurePlatform ("Plataforma morada izquierda", new Vector3 (-4.2f, -2.5f, 0f), new Vector2 (4.5f, 0.35f), arrange);
         changed |= EnsurePlatform ("Plataforma morada elevada", new Vector3 (-3.5f, -0.6f, 0f), new Vector2 (2.6f, 0.35f), arrange);
         changed |= EnsurePlatform ("Plataforma morada derecha", new Vector3 (5.1f, -2.5f, 0f), new Vector2 (4.5f, 0.35f), arrange);
         changed |= EnsurePlatform ("Plataforma morada superior", new Vector3 (4.7f, 1.2f, 0f), new Vector2 (2.5f, 0.35f), arrange);
-        changed |= EnsureTarget ("Cub - objetivo adicional", new Vector3 (-3.5f, 0.2f, 0f), new Color (0.95f, 0.3f, 0.25f), 10, arrange);
-        changed |= EnsureTarget ("Cub - objetivo 2", new Vector3 (5.1f, -1.85f, 0f), new Color (0.12f, 0.68f, 0.72f), 20, arrange);
-        changed |= EnsureTarget ("Cub - objetivo 3", new Vector3 (4.7f, 1.85f, 0f), new Color (0.95f, 0.7f, 0.15f), 30, arrange);
+        changed |= EnsureTarget ("Cub - objetivo adicional", "Plataforma morada elevada", new Color (0.95f, 0.3f, 0.25f), 10, arrange);
+        changed |= EnsureTarget ("Cub - objetivo 2", "Plataforma morada derecha", new Color (0.12f, 0.68f, 0.72f), 20, arrange);
+        changed |= EnsureTarget ("Cub - objetivo 3", "Plataforma morada superior", new Color (0.95f, 0.7f, 0.15f), 30, arrange);
         if (arrange) {
-            new GameObject ("Laboratorio - distribucion v2");
+            new GameObject ("Laboratorio - distribucion v3");
             changed = true;
         }
         Camera camera = Camera.main;
@@ -124,19 +124,24 @@ public static class ConfigureLabScene
         }
     }
 
-    static bool EnsureTarget (string name, Vector3 position, Color color, int points, bool arrange)
+    static bool EnsureTarget (string name, string platformName, Color color, int points, bool arrange)
     {
         GameObject target = GameObject.Find (name);
         bool created = target == null;
         if (created) target = new GameObject (name, typeof (SpriteRenderer), typeof (BoxCollider2D), typeof (ScoreTarget));
         if (created || arrange) {
-            target.transform.position = position;
             target.transform.rotation = Quaternion.identity;
             target.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
         }
         target.GetComponent<SpriteRenderer> ().sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/box.png");
         target.GetComponent<SpriteRenderer> ().color = color;
-        target.GetComponent<BoxCollider2D> ().isTrigger = true;
+        target.GetComponent<BoxCollider2D> ().isTrigger = false;
+        if (created || arrange) {
+            GameObject platform = GameObject.Find (platformName);
+            float platformTop = platform.GetComponent<BoxCollider2D> ().bounds.max.y;
+            float targetHalfHeight = target.GetComponent<SpriteRenderer> ().bounds.extents.y;
+            target.transform.position = new Vector3 (platform.transform.position.x, platformTop + targetHalfHeight + 0.005f, 0f);
+        }
         target.GetComponent<ScoreTarget> ().points = points;
         return created || arrange;
     }

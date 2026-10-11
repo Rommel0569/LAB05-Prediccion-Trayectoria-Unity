@@ -16,14 +16,14 @@ Se partio de la escena `Assets/Scenes/level1.unity` y los recursos del repositor
 - `Trajectory.PrepareDots`: crea los puntos visibles de la curva.
 - `Trajectory.UpdateDots`: calcula sus posiciones futuras.
 - `Trajectory.Show` y `Hide`: muestran u ocultan la vista previa.
-- `ScoreTarget.OnTriggerEnter2D`: avisa al GameManager cuando la bola entra en un cubo y aplica el valor asignado a ese objetivo.
+- `ScoreTarget.OnCollisionEnter2D`: avisa al GameManager cuando la bola choca con un cubo y aplica el valor asignado a ese objetivo.
 - `SoapGoalZone.OnTriggerStay2D`: comprueba que el centro de la bola este dentro del jabon antes de otorgar los 50 puntos.
 - `GameManager.ScoreCube` y `ScoreSoap`: actualizan el total y el desglose, una sola vez por disparo.
 - `GameManager.ResetBall`: restaura la bola y el jabon sin borrar la puntuacion.
 
 ## Ejercicios 2 y 3: objetivo y puntuacion
 
-`ConfigureLabScene` amplia la camara, agrega cuatro plataformas moradas con `BoxCollider2D` y coloca un cubo encima de cada barra objetivo: rojo (10 puntos), turquesa (20) y amarillo (30). Cada cubo tiene un trigger y `ScoreTarget`. El Canvas muestra `SCORE` y el desglose `CUBOS` y `SOAP` en texto oscuro. Todos estos objetos son editables en el Inspector antes de Play.
+`ConfigureLabScene` amplia la camara, agrega cuatro plataformas moradas con `BoxCollider2D` y coloca un cubo apoyado en la parte superior de cada barra objetivo: rojo (10 puntos), turquesa (20) y amarillo (30). Cada cubo tiene un `BoxCollider2D` solido y `ScoreTarget`: la bola choca fisicamente con el objetivo. La altura se calcula con los limites del collider de la plataforma y del sprite del cubo. El Canvas muestra `SCORE` y el desglose `CUBOS` y `SOAP` en texto oscuro. Todos estos objetos son editables en el Inspector antes de Play.
 
 El jabon solo da 50 puntos cuando el centro de la bola entra en `Soap - zona interior`, un trigger hijo de `Cup`. Golpear por fuera o derribar el jabon no suma. `Cup` conserva sus colisiones fisicas, pero ya no puntua por contacto. Cada disparo puntua una sola vez.
 
@@ -50,7 +50,7 @@ Inserte cada captura justo debajo del apartado indicado. Antes de capturar, cier
 
 1. **Despues de “Objetivos y base”**: vista de la escena en modo edicion y jerarquia con `Ball`, `Cup`, los tres objetos `Cub`, las cuatro plataformas moradas, `GameManager` y `Marcador`. Pie: *Figura 1. Escena ampliada de prediccion de trayectoria.*
 2. **Despues de “Ejercicio 1: estructura de clases”**: Inspector de `Ball` mostrando `Rigidbody2D`, `CircleCollider2D` y el material de rebote. Pie: *Figura 2. Componentes fisicos de la bola.*
-3. **Despues de “Ejercicios 2 y 3”**: escena con los tres cubos separados e Inspector de uno de ellos mostrando `SpriteRenderer`, `BoxCollider2D` como trigger y `ScoreTarget`. Pie: *Figura 3. Objetivos adicionales configurables en la escena.*
+3. **Despues de “Ejercicios 2 y 3”**: escena con los tres cubos apoyados sobre barras e Inspector de uno de ellos mostrando `SpriteRenderer`, `BoxCollider2D` solido y `ScoreTarget`. Pie: *Figura 3. Objetivos adicionales apoyados y configurables en la escena.*
 4. **Despues de “Ejercicios 2 y 3”**: ventana Game tras acertar al cubo rojo con `SCORE: 10` y `CUBOS: 1` visibles. Pie: *Figura 4. Puntuacion por impacto en un cubo.*
 5. **Despues de “Ejercicios 2 y 3”**: seleccionar `Soap - zona interior` en la jerarquia y mostrar su `BoxCollider2D` como trigger; luego capturar `SCORE: 50` tras meter la bola en el jabon. Pie: *Figura 5. Puntuacion solo al entrar en el jabon.*
 6. **Despues de “Ejercicio 4”**: ventana Game durante el arrastre, con los puntos de la trayectoria visibles. Pie: *Figura 6. Prediccion parabolica antes del lanzamiento.*

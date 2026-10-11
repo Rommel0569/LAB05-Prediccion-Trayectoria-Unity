@@ -3,9 +3,9 @@ using UnityEngine;
 public class ScoreTarget : MonoBehaviour
 {
     public int points = 10;
-    void OnTriggerEnter2D (Collider2D other)
+    void OnCollisionEnter2D (Collision2D collision)
     {
-        if (other.GetComponent<Ball> () != null)
+        if (collision.gameObject.GetComponent<Ball> () != null)
             GameManager.Instance.ScoreCube (points);
     }
 }
