@@ -32,6 +32,7 @@ public static class ConfigureLabScene
         GameManager manager = Object.FindFirstObjectByType<GameManager> ();
         if (manager == null) return;
         bool changed = false;
+        changed |= EnsureGuideComponents (scene, manager);
 
         bool arrange = GameObject.Find ("Laboratorio - distribucion v3") == null;
         changed |= EnsurePlatform ("Plataforma morada izquierda", new Vector3 (-4.2f, -2.5f, 0f), new Vector2 (4.5f, 0.35f), arrange);
@@ -182,5 +183,76 @@ public static class ConfigureLabScene
         text.text = content;
         text.raycastTarget = false;
         return text;
+    }
+
+    static bool EnsureGuideComponents (Scene scene, GameManager manager)
+    {
+        bool changed = false;
+        foreach (Transform item in Object.FindObjectsByType<Transform> (FindObjectsSortMode.None)) {
+            if (item.gameObject.scene != scene || !item.name.StartsWith ("wall", System.StringComparison.OrdinalIgnoreCase)) continue;
+            if (item.GetComponent<BoxCollider2D> () == null) {
+                item.gameObject.AddComponent<BoxCollider2D> ();
+                changed = true;
+            }
+        }
+
+        GameObject ballObject = GameObject.Find ("Ball");
+        if (ballObject != null) {
+            Ball ball = ballObject.GetComponent<Ball> ();
+            if (ball == null) { ball = ballObject.AddComponent<Ball> (); changed = true; }
+            Rigidbody2D ballBody = ballObject.GetComponent<Rigidbody2D> ();
+            if (ballBody == null) { ballBody = ballObject.AddComponent<Rigidbody2D> (); changed = true; }
+            if (ballBody.mass != 1f || ballBody.gravityScale != 1f || ballBody.linearDamping != 0f || ballBody.angularDamping != 0f || ballBody.collisionDetectionMode != CollisionDetectionMode2D.Discrete) {
+                ballBody.mass = 1f;
+                ballBody.gravityScale = 1f;
+                ballBody.linearDamping = 0f;
+                ballBody.angularDamping = 0f;
+                ballBody.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
+                changed = true;
+            }
+            CircleCollider2D circle = ballObject.GetComponent<CircleCollider2D> ();
+            if (circle == null) { circle = ballObject.AddComponent<CircleCollider2D> (); changed = true; }
+            PhysicsMaterial2D bounce = AssetDatabase.LoadAssetAtPath<PhysicsMaterial2D> ("Assets/Physics/bounciness.physicsMaterial2D");
+            if (bounce != null && circle.sharedMaterial != bounce) { circle.sharedMaterial = bounce; changed = true; }
+            if (bounce != null && ballBody.sharedMaterial != bounce) { ballBody.sharedMaterial = bounce; changed = true; }
+            SerializedObject managerData = new SerializedObject (manager);
+            SerializedProperty ballField = managerData.FindProperty ("ball");
+            if (ballField.objectReferenceValue != ball) {
+                ballField.objectReferenceValue = ball;
+                managerData.ApplyModifiedPropertiesWithoutUndo ();
+                changed = true;
+            }
+        }
+
+        GameObject cupObject = GameObject.Find ("Cup");
+        if (cupObject != null) {
+            Rigidbody2D cupBody = cupObject.GetComponent<Rigidbody2D> ();
+            if (cupBody == null) { cupBody = cupObject.AddComponent<Rigidbody2D> (); changed = true; }
+            if (cupBody.mass != 1.5f || cupBody.gravityScale != 0.5f || cupBody.linearDamping != 0.5f || cupBody.angularDamping != 0.5f || cupBody.collisionDetectionMode != CollisionDetectionMode2D.Continuous) {
+                cupBody.mass = 1.5f;
+                cupBody.gravityScale = 0.5f;
+                cupBody.linearDamping = 0.5f;
+                cupBody.angularDamping = 0.5f;
+                cupBody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+                changed = true;
+            }
+            if (cupObject.GetComponent<EdgeCollider2D> () == null) {
+                EdgeCollider2D edge = cupObject.AddComponent<EdgeCollider2D> ();
+                edge.points = new [] { new Vector2 (-0.7f, 0.8f), new Vector2 (-0.5f, -0.8f), new Vector2 (0.5f, -0.8f), new Vector2 (0.7f, 0.8f) };
+                changed = true;
+            }
+        }
+
+        Trajectory trajectory = Object.FindFirstObjectByType<Trajectory> ();
+        if (trajectory != null) {
+            SerializedObject managerData = new SerializedObject (manager);
+            SerializedProperty trajectoryField = managerData.FindProperty ("trajectory");
+            if (trajectoryField.objectReferenceValue != trajectory) {
+                trajectoryField.objectReferenceValue = trajectory;
+                managerData.ApplyModifiedPropertiesWithoutUndo ();
+                changed = true;
+            }
+        }
+        return changed;
     }
 }

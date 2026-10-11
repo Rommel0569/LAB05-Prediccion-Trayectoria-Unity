@@ -8,6 +8,7 @@ Este proyecto usa la escena, scripts, sprites, prefabs y material fisico origina
 2. Clonar este repositorio con `git clone <URL-del-repositorio>`.
 3. En Unity Hub, seleccionar **Add project from disk** y abrir la carpeta clonada.
 4. Esperar la importacion y abrir `Assets/Scenes/level1.unity`. Unity agrega y guarda automaticamente tres objetos `Cub`, cuatro plataformas moradas y el Canvas `Marcador`. Se pueden seleccionar y mover antes de pulsar Play. Si la escena ya estaba abierta, salir de Play y usar el menu `Laboratorio > Preparar escena y puntuacion` una vez.
+5. Para el ejercicio de Unity Learn, abrir `Assets/Scenes/CalculatingTrajectories.unity` y pulsar Play. Si no aparece, usar `Laboratorio > Crear demo Calculating Trajectories`.
 
 El repositorio original publica solo `Assets`; este proyecto agrega `Packages` y `ProjectSettings` para abrirlo tras clonarlo. La carpeta `Library` se reconstruye al abrirlo.
 
