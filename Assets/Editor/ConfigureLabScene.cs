@@ -42,6 +42,16 @@ public static class ConfigureLabScene
         changed |= EnsureTarget ("Cub - objetivo 2", new Vector3 (-2.5f, 1.5f, 0f), new Color (0.12f, 0.68f, 0.72f));
         changed |= EnsureTarget ("Cub - objetivo 3", new Vector3 (1.4f, 3.2f, 0f), new Color (0.95f, 0.7f, 0.15f));
 
+        changed |= EnsurePlatform ("Plataforma morada izquierda", new Vector3 (-4.2f, -2.5f, 0f), new Vector2 (4.5f, 0.35f));
+        changed |= EnsurePlatform ("Plataforma morada elevada", new Vector3 (-3.5f, -0.6f, 0f), new Vector2 (2.6f, 0.35f));
+        changed |= EnsurePlatform ("Plataforma morada derecha", new Vector3 (5.1f, -2.5f, 0f), new Vector2 (4.5f, 0.35f));
+        changed |= EnsurePlatform ("Plataforma morada superior", new Vector3 (4.7f, 1.2f, 0f), new Vector2 (2.5f, 0.35f));
+        Camera camera = Camera.main;
+        if (camera != null && camera.orthographic && camera.orthographicSize < 6.2f) {
+            camera.orthographicSize = 6.2f;
+            changed = true;
+        }
+
         GameObject cup = GameObject.Find ("Cup");
         if (cup != null && cup.GetComponent<Cup> () == null) {
             cup.AddComponent<Cup> ();
@@ -104,6 +114,21 @@ public static class ConfigureLabScene
         target.GetComponent<SpriteRenderer> ().sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/box.png");
         target.GetComponent<SpriteRenderer> ().color = color;
         target.GetComponent<BoxCollider2D> ().isTrigger = true;
+        return true;
+    }
+
+    static bool EnsurePlatform (string name, Vector3 position, Vector2 size)
+    {
+        if (GameObject.Find (name) != null) return false;
+        GameObject platform = new GameObject (name, typeof (SpriteRenderer), typeof (BoxCollider2D));
+        Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/box.png");
+        SpriteRenderer renderer = platform.GetComponent<SpriteRenderer> ();
+        renderer.sprite = sprite;
+        renderer.color = new Color (0.46f, 0.05f, 0.8f);
+        Vector2 spriteSize = sprite.bounds.size;
+        platform.transform.position = position;
+        platform.transform.localScale = new Vector3 (size.x / spriteSize.x, size.y / spriteSize.y, 1f);
+        platform.GetComponent<BoxCollider2D> ().size = spriteSize;
         return true;
     }
 }

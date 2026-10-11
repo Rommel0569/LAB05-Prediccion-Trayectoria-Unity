@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 	Vector2 force;
 	float distance;
 	int score;
+	GUIStyle fallbackScoreStyle;
 	Vector3 ballStartPosition;
 	bool shotActive;
 	bool resetting;
@@ -44,6 +45,11 @@ public class GameManager : MonoBehaviour
 		cam = Camera.main;
 		ballStartPosition = ball.transform.position;
 		ball.DesactivateRb ();
+		if (scoreText != null) {
+			scoreText.color = new Color (0.08f, 0.08f, 0.08f, 1f);
+			scoreText.fontSize = 36;
+			scoreText.fontStyle = FontStyle.Bold;
+		}
 		UpdateScoreText ();
 	}
 
@@ -136,6 +142,18 @@ public class GameManager : MonoBehaviour
 	{
 		if (scoreText != null)
 			scoreText.text = "SCORE: " + score;
+	}
+
+	void OnGUI ()
+	{
+		if (scoreText != null) return;
+		if (fallbackScoreStyle == null) {
+			fallbackScoreStyle = new GUIStyle (GUI.skin.label);
+			fallbackScoreStyle.fontSize = 36;
+			fallbackScoreStyle.fontStyle = FontStyle.Bold;
+			fallbackScoreStyle.normal.textColor = new Color (0.08f, 0.08f, 0.08f, 1f);
+		}
+		GUI.Label (new Rect (20f, 20f, 350f, 55f), "SCORE: " + score, fallbackScoreStyle);
 	}
 
 }

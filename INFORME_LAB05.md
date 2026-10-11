@@ -21,7 +21,7 @@ Se partio de la escena `Assets/Scenes/level1.unity` y los recursos del repositor
 
 ## Ejercicios 2 y 3: objetivo y puntuacion
 
-`ConfigureLabScene` agrega al archivo de escena tres cubos separados (rojo, turquesa y amarillo), cada uno con `BoxCollider2D` de tipo trigger y `ScoreTarget`, y un Canvas con texto de puntuacion. Los objetos son editables en el Inspector antes de Play. `ScoreTarget` detecta la entrada de la bola. `GameManager.AddPoint` incrementa el marcador. La taza tambien aporta puntos.
+`ConfigureLabScene` amplía la cámara, agrega cuatro plataformas moradas con `BoxCollider2D` y tres cubos separados (rojo, turquesa y amarillo), cada uno con trigger y `ScoreTarget`. Agrega tambien un Canvas con `SCORE` en texto oscuro. Los objetos son editables en el Inspector antes de Play. `ScoreTarget` detecta la entrada de la bola. `GameManager.AddPoint` incrementa el marcador. La taza tambien aporta puntos.
 
 Cada disparo solo puede sumar una vez. Tras un acierto, la bola regresa a la posicion inicial despues de medio segundo. Tambien se reinicia si queda casi inmovil durante 1.5 segundos, cae fuera del area o pasan 12 segundos. La tecla `R` permite reiniciarla en cualquier momento sin borrar la puntuacion.
 
@@ -44,7 +44,7 @@ La escena original fue creada con Unity 5.6 y se importa en Unity 6000.3.17f1. E
 
 Inserte cada captura justo debajo del apartado indicado. Antes de capturar, cierre la consola de errores y procure que el objeto o componente relevante sea legible.
 
-1. **Despues de “Objetivos y base”**: vista de la escena en modo edicion y jerarquia con `Ball`, `Cup`, `Cub - objetivo adicional`, `GameManager` y `Marcador`. Pie: *Figura 1. Objetos de la escena de prediccion de trayectoria.*
+1. **Despues de “Objetivos y base”**: vista de la escena en modo edicion y jerarquia con `Ball`, `Cup`, los tres objetos `Cub`, las cuatro plataformas moradas, `GameManager` y `Marcador`. Pie: *Figura 1. Escena ampliada de prediccion de trayectoria.*
 2. **Despues de “Ejercicio 1: estructura de clases”**: Inspector de `Ball` mostrando `Rigidbody2D`, `CircleCollider2D` y el material de rebote. Pie: *Figura 2. Componentes fisicos de la bola.*
 3. **Despues de “Ejercicios 2 y 3”**: escena con los tres cubos separados e Inspector de uno de ellos mostrando `SpriteRenderer`, `BoxCollider2D` como trigger y `ScoreTarget`. Pie: *Figura 3. Objetivos adicionales configurables en la escena.*
 4. **Despues de “Ejercicios 2 y 3”**: ventana Game tras un acierto con `SCORE: 1` visible. Pie: *Figura 4. Incremento de puntuacion al acertar.*
