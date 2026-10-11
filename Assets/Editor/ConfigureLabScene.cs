@@ -70,12 +70,17 @@ public static class ConfigureLabScene
             rect.sizeDelta = new Vector2 (300f, 50f);
             scoreText = textObject.GetComponent<Text> ();
             scoreText.font = Resources.GetBuiltinResource<Font> ("LegacyRuntime.ttf");
-            scoreText.fontSize = 28;
-            scoreText.color = Color.white;
-            scoreText.text = "Puntos: 0";
             changed = true;
         } else {
             scoreText = scoreTransform.GetComponent<Text> ();
+        }
+        if (scoreText != null) {
+            scoreText.fontSize = 36;
+            scoreText.fontStyle = FontStyle.Bold;
+            scoreText.color = new Color (0.08f, 0.08f, 0.08f, 1f);
+            scoreText.text = "SCORE: 0";
+            scoreText.raycastTarget = false;
+            changed = true;
         }
 
         SerializedObject serialized = new SerializedObject (manager);

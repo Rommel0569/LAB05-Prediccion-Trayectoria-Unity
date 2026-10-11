@@ -10,7 +10,7 @@ Se partio de la escena `Assets/Scenes/level1.unity` y los recursos del repositor
 - `Ball.Push`: aplica un impulso al cuerpo fisico.
 - `Ball.ActivateRb` y `DesactivateRb`: activan o detienen la simulacion durante el arrastre.
 - `GameManager.Awake`: registra la instancia compartida.
-- `GameManager.Start`: obtiene la camara, detiene la bola y crea el objetivo extra.
+- `GameManager.Start`: obtiene la camara, guarda la posicion inicial, detiene la bola y actualiza el marcador.
 - `GameManager.Update`: detecta presionar, arrastrar y soltar el mouse.
 - `OnDragStart`, `OnDrag`, `OnDragEnd`: calculan la fuerza, muestran la prediccion y lanzan la bola.
 - `Trajectory.PrepareDots`: crea los puntos visibles de la curva.
@@ -38,4 +38,15 @@ Referencia: https://learn.unity.com/course/the-physics-of-ai (seccion Calculatin
 
 ## Estado de comprobacion
 
-La escena original fue creada con Unity 5.6 y se importa en Unity 6000.3.17f1. Se requiere abrir `level1.unity`, entrar en Play y comprobar visualmente la posicion del objetivo extra, el lanzamiento, la prediccion y el marcador en el editor instalado.
+La escena original fue creada con Unity 5.6 y se importa en Unity 6000.3.17f1. El marcador se muestra como `SCORE: 0` en texto negro sobre el fondo blanco. Se requiere comprobar en Play el lanzamiento, el acierto y el reinicio en el editor instalado.
+
+## Capturas para entregar
+
+Inserte cada captura justo debajo del apartado indicado. Antes de capturar, cierre la consola de errores y procure que el objeto o componente relevante sea legible.
+
+1. **Despues de “Objetivos y base”**: vista de la escena en modo edicion y jerarquia con `Ball`, `Cup`, `Cub - objetivo adicional`, `GameManager` y `Marcador`. Pie: *Figura 1. Objetos de la escena de prediccion de trayectoria.*
+2. **Despues de “Ejercicio 1: estructura de clases”**: Inspector de `Ball` mostrando `Rigidbody2D`, `CircleCollider2D` y el material de rebote. Pie: *Figura 2. Componentes fisicos de la bola.*
+3. **Despues de “Ejercicios 2 y 3”**: Inspector del `Cub - objetivo adicional` mostrando `SpriteRenderer`, `BoxCollider2D` como trigger y `ScoreTarget`. Pie: *Figura 3. Objetivo adicional configurable en la escena.*
+4. **Despues de “Ejercicios 2 y 3”**: ventana Game tras un acierto con `SCORE: 1` visible. Pie: *Figura 4. Incremento de puntuacion al acertar.*
+5. **Despues de “Ejercicio 4”**: ventana Game durante el arrastre, con los puntos de la trayectoria visibles. Pie: *Figura 5. Prediccion parabolica antes del lanzamiento.*
+6. **Despues de “Ejercicios 2 y 3”**: ventana Game con la bola devuelta al inicio tras fallar o pulsar `R`, conservando el puntaje. Pie: *Figura 6. Reinicio de la bola sin borrar la puntuacion.*

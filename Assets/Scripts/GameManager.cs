@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
 	void UpdateScoreText ()
 	{
 		if (scoreText != null)
-			scoreText.text = "Puntos: " + score;
+			scoreText.text = "SCORE: " + score;
 	}
 
 }
