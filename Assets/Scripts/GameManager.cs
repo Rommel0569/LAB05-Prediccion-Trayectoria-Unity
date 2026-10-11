@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
 	public Ball ball;
 	public Trajectory trajectory;
 	[SerializeField] float pushForce = 4f;
+	[SerializeField] Text scoreText;
 
 	bool isDragging = false;
 
@@ -30,7 +32,6 @@ public class GameManager : MonoBehaviour
 	Vector2 force;
 	float distance;
 	int score;
-	GUIStyle scoreStyle;
 	Vector3 ballStartPosition;
 	bool shotActive;
 	bool resetting;
@@ -43,10 +44,7 @@ public class GameManager : MonoBehaviour
 		cam = Camera.main;
 		ballStartPosition = ball.transform.position;
 		ball.DesactivateRb ();
-		CreateExtraTarget ();
-		GameObject cup = GameObject.Find ("Cup");
-		if (cup != null && cup.GetComponent<Cup> () == null)
-			cup.AddComponent<Cup> ();
+		UpdateScoreText ();
 	}
 
 	void Update ()
@@ -57,7 +55,7 @@ public class GameManager : MonoBehaviour
 		}
 		if (shotActive && !resetting) {
 			shotTime += Time.deltaTime;
-			stillTime = ball.rb.velocity.sqrMagnitude < 0.04f ? stillTime + Time.deltaTime : 0f;
+			stillTime = ball.rb.linearVelocity.sqrMagnitude < 0.04f ? stillTime + Time.deltaTime : 0f;
 			if (shotTime > 12f || (shotTime > 1f && stillTime > 1.5f) || ball.transform.position.y < -7f)
 				ResetBall ();
 		}
@@ -111,23 +109,11 @@ public class GameManager : MonoBehaviour
 		trajectory.Hide ();
 	}
 
-	void CreateExtraTarget ()
-	{
-		GameObject target = new GameObject ("Cub - objetivo adicional");
-		target.transform.position = new Vector3 (2.5f, 0f, 0f);
-		target.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
-		SpriteRenderer renderer = target.AddComponent<SpriteRenderer> ();
-		renderer.sprite = Sprite.Create (Texture2D.whiteTexture, new Rect (0, 0, 1, 1), new Vector2 (0.5f, 0.5f), 1f);
-		renderer.color = new Color (0.95f, 0.3f, 0.25f);
-		BoxCollider2D collider = target.AddComponent<BoxCollider2D> ();
-		collider.isTrigger = true;
-		target.AddComponent<ScoreTarget> ();
-	}
-
 	public void AddPoint ()
 	{
 		if (!shotActive || resetting) return;
 		score++;
+		UpdateScoreText ();
 		shotActive = false;
 		resetting = true;
 		Invoke (nameof (ResetBall), 0.5f);
@@ -146,15 +132,10 @@ public class GameManager : MonoBehaviour
 		trajectory.Hide ();
 	}
 
-	void OnGUI ()
+	void UpdateScoreText ()
 	{
-		if (scoreStyle == null) {
-			scoreStyle = new GUIStyle (GUI.skin.label);
-			scoreStyle.fontSize = 24;
-			scoreStyle.normal.textColor = Color.white;
-		}
-		GUI.Label (new Rect (20, 20, 250, 40), "Puntos: " + score, scoreStyle);
-		GUI.Label (new Rect (20, 55, 500, 30), "R: reiniciar bola");
+		if (scoreText != null)
+			scoreText.text = "Puntos: " + score;
 	}
 
 }

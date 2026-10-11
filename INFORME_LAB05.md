@@ -21,7 +21,7 @@ Se partio de la escena `Assets/Scenes/level1.unity` y los recursos del repositor
 
 ## Ejercicios 2 y 3: objetivo y puntuacion
 
-`GameManager.CreateExtraTarget` crea un sprite cuadrado rojo con `BoxCollider2D` de tipo trigger. `ScoreTarget` detecta la entrada de la bola. `GameManager.AddPoint` incrementa el marcador, mostrado por `OnGUI`. La taza tambien aporta puntos.
+`ConfigureLabScene` agrega al archivo de escena un sprite cuadrado rojo con `BoxCollider2D` de tipo trigger y un Canvas con texto de puntuacion. Ambos objetos son editables en el Inspector antes de Play. `ScoreTarget` detecta la entrada de la bola. `GameManager.AddPoint` incrementa el marcador. La taza tambien aporta puntos.
 
 Cada disparo solo puede sumar una vez. Tras un acierto, la bola regresa a la posicion inicial despues de medio segundo. Tambien se reinicia si queda casi inmovil durante 1.5 segundos, cae fuera del area o pasan 12 segundos. La tecla `R` permite reiniciarla en cualquier momento sin borrar la puntuacion.
 

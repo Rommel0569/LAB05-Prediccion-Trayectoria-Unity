@@ -7,7 +7,7 @@ Este proyecto usa la escena, scripts, sprites, prefabs y material fisico origina
 1. Instalar Unity Hub y Unity Editor 6000.3.17f1.
 2. Clonar este repositorio con `git clone <URL-del-repositorio>`.
 3. En Unity Hub, seleccionar **Add project from disk** y abrir la carpeta clonada.
-4. Esperar la importacion, abrir `Assets/Scenes/level1.unity` y pulsar Play.
+4. Esperar la importacion y abrir `Assets/Scenes/level1.unity`. Unity agrega y guarda automaticamente el objeto `Cub - objetivo adicional` y el Canvas `Marcador` en la escena. Ambos se pueden seleccionar y mover antes de pulsar Play. Si no aparecen, usar el menu `Laboratorio > Preparar escena y puntuacion`.
 
 El repositorio original publica solo `Assets`; este proyecto agrega `Packages` y `ProjectSettings` para abrirlo tras clonarlo. La carpeta `Library` se reconstruye al abrirlo.
 
