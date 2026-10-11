@@ -33,28 +33,40 @@ public static class ConfigureLabScene
         if (manager == null) return;
         bool changed = false;
 
-        GameObject originalTarget = GameObject.Find ("Cub - objetivo adicional");
-        if (originalTarget != null && Vector3.Distance (originalTarget.transform.position, new Vector3 (2.5f, 0f, 0f)) < 0.1f) {
-            originalTarget.transform.position = new Vector3 (0f, 2.2f, 0f);
+        bool arrange = GameObject.Find ("Laboratorio - distribucion v2") == null;
+        changed |= EnsurePlatform ("Plataforma morada izquierda", new Vector3 (-4.2f, -2.5f, 0f), new Vector2 (4.5f, 0.35f), arrange);
+        changed |= EnsurePlatform ("Plataforma morada elevada", new Vector3 (-3.5f, -0.6f, 0f), new Vector2 (2.6f, 0.35f), arrange);
+        changed |= EnsurePlatform ("Plataforma morada derecha", new Vector3 (5.1f, -2.5f, 0f), new Vector2 (4.5f, 0.35f), arrange);
+        changed |= EnsurePlatform ("Plataforma morada superior", new Vector3 (4.7f, 1.2f, 0f), new Vector2 (2.5f, 0.35f), arrange);
+        changed |= EnsureTarget ("Cub - objetivo adicional", new Vector3 (-3.5f, 0.2f, 0f), new Color (0.95f, 0.3f, 0.25f), 10, arrange);
+        changed |= EnsureTarget ("Cub - objetivo 2", new Vector3 (5.1f, -1.85f, 0f), new Color (0.12f, 0.68f, 0.72f), 20, arrange);
+        changed |= EnsureTarget ("Cub - objetivo 3", new Vector3 (4.7f, 1.85f, 0f), new Color (0.95f, 0.7f, 0.15f), 30, arrange);
+        if (arrange) {
+            new GameObject ("Laboratorio - distribucion v2");
             changed = true;
         }
-        changed |= EnsureTarget ("Cub - objetivo adicional", new Vector3 (0f, 2.2f, 0f), new Color (0.95f, 0.3f, 0.25f));
-        changed |= EnsureTarget ("Cub - objetivo 2", new Vector3 (-2.5f, 1.5f, 0f), new Color (0.12f, 0.68f, 0.72f));
-        changed |= EnsureTarget ("Cub - objetivo 3", new Vector3 (1.4f, 3.2f, 0f), new Color (0.95f, 0.7f, 0.15f));
-
-        changed |= EnsurePlatform ("Plataforma morada izquierda", new Vector3 (-4.2f, -2.5f, 0f), new Vector2 (4.5f, 0.35f));
-        changed |= EnsurePlatform ("Plataforma morada elevada", new Vector3 (-3.5f, -0.6f, 0f), new Vector2 (2.6f, 0.35f));
-        changed |= EnsurePlatform ("Plataforma morada derecha", new Vector3 (5.1f, -2.5f, 0f), new Vector2 (4.5f, 0.35f));
-        changed |= EnsurePlatform ("Plataforma morada superior", new Vector3 (4.7f, 1.2f, 0f), new Vector2 (2.5f, 0.35f));
         Camera camera = Camera.main;
         if (camera != null && camera.orthographic && camera.orthographicSize < 6.2f) {
             camera.orthographicSize = 6.2f;
             changed = true;
         }
+        if (SceneView.lastActiveSceneView != null)
+            SceneView.lastActiveSceneView.in2DMode = true;
 
         GameObject cup = GameObject.Find ("Cup");
         if (cup != null && cup.GetComponent<Cup> () == null) {
             cup.AddComponent<Cup> ();
+            changed = true;
+        }
+        if (cup != null && cup.transform.Find ("Soap - zona interior") == null) {
+            GameObject zone = new GameObject ("Soap - zona interior", typeof (BoxCollider2D), typeof (SoapGoalZone));
+            zone.transform.SetParent (cup.transform, false);
+            SpriteRenderer cupRenderer = cup.GetComponent<SpriteRenderer> ();
+            Vector2 cupSize = cupRenderer != null && cupRenderer.sprite != null ? cupRenderer.sprite.bounds.size : new Vector2 (2f, 2f);
+            zone.transform.localPosition = new Vector3 (0f, cupSize.y * 0.12f, 0f);
+            BoxCollider2D zoneCollider = zone.GetComponent<BoxCollider2D> ();
+            zoneCollider.size = new Vector2 (cupSize.x * 0.48f, cupSize.y * 0.38f);
+            zoneCollider.isTrigger = true;
             changed = true;
         }
 
@@ -90,11 +102,18 @@ public static class ConfigureLabScene
             scoreText.raycastTarget = false;
             changed = true;
         }
+        Text detailText = EnsureUiText (canvasObject.transform, "Detalle de puntos", new Vector2 (20f, -65f), 20, "CUBOS: 0   SOAP: 0");
 
         SerializedObject serialized = new SerializedObject (manager);
         SerializedProperty scoreField = serialized.FindProperty ("scoreText");
         if (scoreField.objectReferenceValue != scoreText) {
             scoreField.objectReferenceValue = scoreText;
+            serialized.ApplyModifiedPropertiesWithoutUndo ();
+            changed = true;
+        }
+        SerializedProperty detailField = serialized.FindProperty ("detailText");
+        if (detailField.objectReferenceValue != detailText) {
+            detailField.objectReferenceValue = detailText;
             serialized.ApplyModifiedPropertiesWithoutUndo ();
             changed = true;
         }
@@ -105,30 +124,58 @@ public static class ConfigureLabScene
         }
     }
 
-    static bool EnsureTarget (string name, Vector3 position, Color color)
+    static bool EnsureTarget (string name, Vector3 position, Color color, int points, bool arrange)
     {
-        if (GameObject.Find (name) != null) return false;
-        GameObject target = new GameObject (name, typeof (SpriteRenderer), typeof (BoxCollider2D), typeof (ScoreTarget));
-        target.transform.position = position;
-        target.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
+        GameObject target = GameObject.Find (name);
+        bool created = target == null;
+        if (created) target = new GameObject (name, typeof (SpriteRenderer), typeof (BoxCollider2D), typeof (ScoreTarget));
+        if (created || arrange) {
+            target.transform.position = position;
+            target.transform.rotation = Quaternion.identity;
+            target.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
+        }
         target.GetComponent<SpriteRenderer> ().sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/box.png");
         target.GetComponent<SpriteRenderer> ().color = color;
         target.GetComponent<BoxCollider2D> ().isTrigger = true;
-        return true;
+        target.GetComponent<ScoreTarget> ().points = points;
+        return created || arrange;
     }
 
-    static bool EnsurePlatform (string name, Vector3 position, Vector2 size)
+    static bool EnsurePlatform (string name, Vector3 position, Vector2 size, bool arrange)
     {
-        if (GameObject.Find (name) != null) return false;
-        GameObject platform = new GameObject (name, typeof (SpriteRenderer), typeof (BoxCollider2D));
+        GameObject platform = GameObject.Find (name);
+        bool created = platform == null;
+        if (created) platform = new GameObject (name, typeof (SpriteRenderer), typeof (BoxCollider2D));
         Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/box.png");
         SpriteRenderer renderer = platform.GetComponent<SpriteRenderer> ();
         renderer.sprite = sprite;
         renderer.color = new Color (0.46f, 0.05f, 0.8f);
         Vector2 spriteSize = sprite.bounds.size;
-        platform.transform.position = position;
-        platform.transform.localScale = new Vector3 (size.x / spriteSize.x, size.y / spriteSize.y, 1f);
+        if (created || arrange) {
+            platform.transform.position = position;
+            platform.transform.rotation = Quaternion.identity;
+            platform.transform.localScale = new Vector3 (size.x / spriteSize.x, size.y / spriteSize.y, 1f);
+        }
         platform.GetComponent<BoxCollider2D> ().size = spriteSize;
-        return true;
+        return created || arrange;
+    }
+
+    static Text EnsureUiText (Transform parent, string name, Vector2 position, int size, string content)
+    {
+        Transform existing = parent.Find (name);
+        GameObject textObject = existing != null ? existing.gameObject : new GameObject (name, typeof (RectTransform), typeof (Text));
+        if (existing == null) textObject.transform.SetParent (parent, false);
+        RectTransform rect = textObject.GetComponent<RectTransform> ();
+        rect.anchorMin = rect.anchorMax = new Vector2 (0f, 1f);
+        rect.pivot = new Vector2 (0f, 1f);
+        rect.anchoredPosition = position;
+        rect.sizeDelta = new Vector2 (420f, 35f);
+        Text text = textObject.GetComponent<Text> ();
+        text.font = Resources.GetBuiltinResource<Font> ("LegacyRuntime.ttf");
+        text.fontSize = size;
+        text.color = new Color (0.08f, 0.08f, 0.08f, 1f);
+        text.text = content;
+        text.raycastTarget = false;
+        return text;
     }
 }

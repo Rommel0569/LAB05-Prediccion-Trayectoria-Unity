@@ -15,6 +15,7 @@ El repositorio original publica solo `Assets`; este proyecto agrega `Packages` y
 
 - Arrastrar la bola con el mouse y soltar para lanzar.
 - La escena y los controles son los del tutorial original.
-- Al acertar se suma un punto y la bola se reinicia. Si se queda quieta, sale del area o pasan 12 segundos, se reinicia automaticamente. `R` reinicia manualmente.
+- Los cubos rojo, turquesa y amarillo valen 10, 20 y 30 puntos. El jabon vale 50 solo si el centro de la bola entra en su zona interior; tocarlo por fuera no puntua.
+- Tras un acierto la bola se reinicia. Si se queda quieta, sale del area o pasan 12 segundos, se reinicia automaticamente. `R` devuelve la bola y el jabon a sus posiciones iniciales sin borrar el puntaje.
 
 `Ball.cs`, `GameManager.cs`, `Trajectory.cs` y `Cup.cs` parten de los scripts originales. Los ejercicios adicionales (objetivo y puntuacion) se implementan en esos scripts y `ScoreTarget.cs`. La explicacion y el cuestionario estan en `INFORME_LAB05.md`.
