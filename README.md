@@ -4,7 +4,7 @@ Proyecto Unity 2D autocontenido para el laboratorio de prediccion de trayectoria
 
 ## Abrir en otra PC
 
-1. Instalar Unity Hub y Unity Editor 2022.3 LTS (idealmente 2022.3.62f1).
+1. Instalar Unity Hub y Unity Editor 6000.3.17f1.
 2. Clonar este repositorio con `git clone <URL-del-repositorio>`.
 3. En Unity Hub, seleccionar **Add project from disk** y abrir la carpeta clonada.
 4. Esperar la importacion. La primera vez se genera `Assets/Scenes/Main.unity` automaticamente. Abrir esa escena y pulsar Play.
