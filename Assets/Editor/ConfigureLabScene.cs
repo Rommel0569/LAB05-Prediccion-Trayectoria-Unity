@@ -134,9 +134,14 @@ public static class ConfigureLabScene
             target.transform.rotation = Quaternion.identity;
             target.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
         }
-        target.GetComponent<SpriteRenderer> ().sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/box.png");
-        target.GetComponent<SpriteRenderer> ().color = color;
-        target.GetComponent<BoxCollider2D> ().isTrigger = false;
+        SpriteRenderer renderer = target.GetComponent<SpriteRenderer> ();
+        renderer.sprite = AssetDatabase.LoadAssetAtPath<Sprite> ("Assets/Sprites/box.png");
+        renderer.color = color;
+        BoxCollider2D collider = target.GetComponent<BoxCollider2D> ();
+        Vector2 colliderSize = renderer.sprite.bounds.size;
+        bool colliderChanged = collider.size != colliderSize || collider.isTrigger;
+        collider.size = colliderSize;
+        collider.isTrigger = false;
         if (created || arrange) {
             GameObject platform = GameObject.Find (platformName);
             float platformTop = platform.GetComponent<BoxCollider2D> ().bounds.max.y;
@@ -144,7 +149,7 @@ public static class ConfigureLabScene
             target.transform.position = new Vector3 (platform.transform.position.x, platformTop + targetHalfHeight + 0.005f, 0f);
         }
         target.GetComponent<ScoreTarget> ().points = points;
-        return created || arrange;
+        return created || arrange || colliderChanged;
     }
 
     static bool EnsurePlatform (string name, Vector3 position, Vector2 size, bool arrange)

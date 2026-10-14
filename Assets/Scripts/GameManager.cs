@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -74,7 +75,7 @@ public class GameManager : MonoBehaviour
 
 	void Update ()
 	{
-		if (Input.GetKeyDown (KeyCode.R)) {
+		if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame) {
 			ResetBall ();
 			return;
 		}
@@ -84,11 +85,13 @@ public class GameManager : MonoBehaviour
 			if (shotTime > 12f || (shotTime > 1f && stillTime > 1.5f) || ball.transform.position.y < -7f)
 				ResetBall ();
 		}
-		if (!shotActive && !resetting && Input.GetMouseButtonDown (0)) {
+		Mouse mouse = Mouse.current;
+		if (mouse == null) return;
+		if (!shotActive && !resetting && mouse.leftButton.wasPressedThisFrame) {
 			isDragging = true;
 			OnDragStart ();
 		}
-		if (isDragging && Input.GetMouseButtonUp (0)) {
+		if (isDragging && mouse.leftButton.wasReleasedThisFrame) {
 			isDragging = false;
 			OnDragEnd ();
 		}
@@ -102,14 +105,14 @@ public class GameManager : MonoBehaviour
 	void OnDragStart ()
 	{
 		ball.DesactivateRb ();
-		startPoint = cam.ScreenToWorldPoint (Input.mousePosition);
+		startPoint = cam.ScreenToWorldPoint (Mouse.current.position.ReadValue ());
 
 		trajectory.Show ();
 	}
 
 	void OnDrag ()
 	{
-		endPoint = cam.ScreenToWorldPoint (Input.mousePosition);
+		endPoint = cam.ScreenToWorldPoint (Mouse.current.position.ReadValue ());
 		distance = Vector2.Distance (startPoint, endPoint);
 		direction = (startPoint - endPoint).normalized;
 		force = direction * distance * pushForce;
